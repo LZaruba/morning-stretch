@@ -1,0 +1,119 @@
+package cz.lzaruba.minecraft.stretch.stretch;
+
+import cz.lzaruba.minecraft.stretch.network.StretchPayload;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+public final class StretchManager {
+	public static final int DURATION_TICKS = StretchAnimations.DURATION_TICKS;
+	private static final int WAKE_STRETCH_DELAY_TICKS = 10;
+
+	private static final Map<UUID, Integer> activeStretches = new ConcurrentHashMap<>();
+	private static final Map<UUID, Integer> pendingWakeStretch = new ConcurrentHashMap<>();
+	private static final Set<UUID> sleepingInBed = ConcurrentHashMap.newKeySet();
+
+	private StretchManager() {
+	}
+
+	public static void onStartSleeping(ServerPlayer player) {
+		sleepingInBed.add(player.getUUID());
+	}
+
+	public static void onStopSleeping(ServerPlayer player) {
+		if (!sleepingInBed.remove(player.getUUID())) {
+			return;
+		}
+
+		pendingWakeStretch.put(player.getUUID(), WAKE_STRETCH_DELAY_TICKS);
+	}
+
+	public static void startStretch(ServerPlayer player) {
+		if (player.isSpectator()) {
+			return;
+		}
+
+		if (isStretching(player)) {
+			return;
+		}
+
+		activeStretches.put(player.getUUID(), DURATION_TICKS);
+		broadcastStretch(player);
+	}
+
+	public static boolean isStretching(Player player) {
+		return activeStretches.getOrDefault(player.getUUID(), 0) > 0;
+	}
+
+	public static void tick(MinecraftServer server) {
+		tickPendingWakeStretch(server);
+
+		if (activeStretches.isEmpty()) {
+			return;
+		}
+
+		Iterator<Map.Entry<UUID, Integer>> iterator = activeStretches.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<UUID, Integer> entry = iterator.next();
+			int remaining = entry.getValue() - 1;
+			if (remaining <= 0) {
+				iterator.remove();
+			} else {
+				entry.setValue(remaining);
+				slowPlayerDuringStretch(server, entry.getKey());
+			}
+		}
+	}
+
+	private static void tickPendingWakeStretch(MinecraftServer server) {
+		if (pendingWakeStretch.isEmpty()) {
+			return;
+		}
+
+		Iterator<Map.Entry<UUID, Integer>> iterator = pendingWakeStretch.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<UUID, Integer> entry = iterator.next();
+			int remaining = entry.getValue() - 1;
+			if (remaining <= 0) {
+				iterator.remove();
+				ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+				if (player != null && !player.isSleeping()) {
+					startStretch(player);
+				}
+			} else {
+				entry.setValue(remaining);
+			}
+		}
+	}
+
+	private static void slowPlayerDuringStretch(MinecraftServer server, UUID playerUuid) {
+		ServerPlayer player = server.getPlayerList().getPlayer(playerUuid);
+		if (player == null) {
+			return;
+		}
+
+		player.setSprinting(false);
+		Vec3 velocity = player.getDeltaMovement();
+		player.setDeltaMovement(velocity.x * 0.82, velocity.y, velocity.z * 0.82);
+	}
+
+	private static void broadcastStretch(ServerPlayer player) {
+		StretchPayload payload = new StretchPayload(player.getUUID());
+		ServerPlayNetworking.send(player, payload);
+
+		for (ServerPlayer viewer : PlayerLookup.tracking(player)) {
+			if (viewer != player) {
+				ServerPlayNetworking.send(viewer, payload);
+			}
+		}
+	}
+}

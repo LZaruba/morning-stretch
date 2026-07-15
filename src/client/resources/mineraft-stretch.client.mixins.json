@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "cz.lzaruba.minecraft.stretch.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"PlayerModelMixin",
+		"ItemInHandRendererMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

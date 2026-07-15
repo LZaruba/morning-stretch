@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "mineraft-stretch",
+	"version": "${version}",
+	"name": "Mineraft Stretch",
+	"description": "Protahování po probuzení z postele a na klávesovou zkratku.",
+	"authors": [
+		"Lukas"
+	],
+	"license": "LGPL-3.0-or-later",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"cz.lzaruba.minecraft.stretch.MineraftStretchMod"
+		],
+		"client": [
+			"cz.lzaruba.minecraft.stretch.client.MineraftStretchClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "mineraft-stretch.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
