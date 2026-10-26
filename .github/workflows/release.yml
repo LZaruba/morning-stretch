@@ -1,9 +1,11 @@
 # Release: started by hand from the Actions tab. Takes main, bumps the version,
+# writes the changelog (the Unreleased section of CHANGELOG.md, or notes generated
+# from the pull requests merged since the last release when it is empty),
 # commits the release (gradle.properties + CHANGELOG.md), tags it and publishes
 # the mod to Modrinth and GitHub Releases. It also syncs the Modrinth project page
 # (summary, description, tags, license, links, icon, gallery) from the repository.
 #
-# Needs the MODRINTH_TOKEN repository secret (a Modrinth PAT with the
+# Needs the MODRINTH_TOKEN secret in the "default" environment (a Modrinth PAT with the
 # "Read projects", "Write projects" and "Create versions" scopes).
 
 name: release
@@ -33,6 +35,8 @@ env:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    # MODRINTH_TOKEN is stored as a secret of the 'default' environment.
+    environment: default
     steps:
       - name: checkout main
         uses: actions/checkout@v6
@@ -54,7 +58,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           if [ -z "$MODRINTH_TOKEN" ]; then
-            echo "::error::The MODRINTH_TOKEN repository secret is not set"
+            echo "::error::The MODRINTH_TOKEN secret of the default environment is not set"
             exit 1
           fi
           id=$(curl -fsS -H "Authorization: $MODRINTH_TOKEN" "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT" | jq -r .id)
@@ -93,19 +97,19 @@ jobs:
           echo "VERSION=$next" >> "$GITHUB_ENV"
 
       - name: create release commit and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           sed -i "s/^mod_version=.*/mod_version=$VERSION/" gradle.properties
-          # Turn the "## Unreleased" section into "## <version>" and start a new empty one.
-          python3 - <<'EOF'
-          import os, re, sys, pathlib
-          path = pathlib.Path("CHANGELOG.md")
-          head, found, rest = path.read_text().partition("## Unreleased\n")
-          if not found:
-              sys.exit("::error::CHANGELOG.md has no '## Unreleased' section")
-          if not re.split(r"(?m)^## ", rest, maxsplit=1)[0].strip():
-              sys.exit("::error::The Unreleased section of CHANGELOG.md is empty")
-          path.write_text(f"{head}## Unreleased\n\n## {os.environ['VERSION']}\n{rest}")
-          EOF
+          # Notes from the pull requests merged since the previous release, used when
+          # the Unreleased section of CHANGELOG.md is empty.
+          previous=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)
+          args=(-f tag_name="v$VERSION" -f target_commitish=main)
+          if [ -n "$previous" ]; then
+            args+=(-f previous_tag_name="$previous")
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" "${args[@]}" --jq .body > "$RUNNER_TEMP/github-notes.md"
+          python3 tools/release_changelog.py "$VERSION" "$RUNNER_TEMP/github-notes.md"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "Release $VERSION"

@@ -1,6 +1,6 @@
 # Changelog
 
-Add entries for the next release under **Unreleased**; the release workflow turns it into the version section.
+Entries under **Unreleased** are optional: the release workflow turns them into the version section, and when Unreleased is empty it lists the pull requests merged since the last release instead.
 
 ## Unreleased
 

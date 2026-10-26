@@ -9,6 +9,8 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-24.04
+    # MODRINTH_TOKEN is stored as a secret of the 'default' environment.
+    environment: default
     steps:
       - name: checkout main
         uses: actions/checkout@v6
@@ -19,7 +21,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           if [ -z "$MODRINTH_TOKEN" ]; then
-            echo "::error::The MODRINTH_TOKEN repository secret is not set"
+            echo "::error::The MODRINTH_TOKEN secret of the default environment is not set"
             exit 1
           fi
           python3 tools/sync_modrinth_project.py

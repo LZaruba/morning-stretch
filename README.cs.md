@@ -267,10 +267,10 @@ Na něm ověříš skrytí jmenovky, locator baru i selektorů v příkazech. Ve
 
 ## Vydání nové verze
 
-1. Změny zapiš do [CHANGELOG.md](CHANGELOG.md) pod **Unreleased** a dostaň je do `main`.
+1. Dostaň změny do `main`. Názvy PR se dostanou do changelogu, takže je piš srozumitelně pro hráče.
 2. Na GitHubu spusť workflow **release** (*Actions → release → Run workflow*) a vyber, kterou část verze zvýšit (`patch`, `minor`, `major`), nebo zadej přesnou verzi.
 
-Workflow vezme `main`, zvýší `mod_version` v `gradle.properties`, z Unreleased udělá sekci nové verze, vytvoří release commit s tagem `v<verze>` a publikuje mod na Modrinth a do GitHub Releases. Potřebuje secret `MODRINTH_TOKEN` (viz anglický README).
+Workflow vezme `main`, zvýší `mod_version` v `gradle.properties` a napíše sekci nové verze do [CHANGELOG.md](CHANGELOG.md): použije ručně zapsané **Unreleased**, a když je prázdné, vypíše PR mergnuté od posledního vydání. Pak vytvoří release commit s tagem `v<verze>` a publikuje mod s tímto changelogem na Modrinth a do GitHub Releases. Potřebuje secret `MODRINTH_TOKEN` (viz anglický README).
 
 Stránka projektu na Modrinthu (shrnutí, popis, kategorie, licence, odkazy, ikona a galerie) je uložená v repu v `docs/` a při každém vydání se nahraje. Bez vydání ji aktualizuje workflow **modrinth-project**.
 
