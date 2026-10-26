@@ -1,10 +1,14 @@
 package cz.lzaruba.minecraft.morningstretch.stretch;
 
+import cz.lzaruba.minecraft.morningstretch.MorningStretchMod;
 import cz.lzaruba.minecraft.morningstretch.network.StretchPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Iterator;
@@ -16,6 +20,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class StretchManager {
 	public static final int DURATION_TICKS = StretchAnimations.DURATION_TICKS;
 	private static final int WAKE_STRETCH_DELAY_TICKS = 10;
+
+	// Zeroes the waypoint transmit range, which removes the player from other players'
+	// locator bar (the same mechanism vanilla uses for carved pumpkins and mob heads).
+	private static final AttributeModifier HIDE_FROM_LOCATOR_BAR = new AttributeModifier(
+			MorningStretchMod.id("stretch_hide_from_locator_bar"),
+			-1.0,
+			AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+	);
 
 	private static final Map<UUID, Integer> activeStretches = new ConcurrentHashMap<>();
 	private static final Map<UUID, Integer> pendingWakeStretch = new ConcurrentHashMap<>();
@@ -46,6 +58,7 @@ public final class StretchManager {
 		}
 
 		activeStretches.put(player.getUUID(), DURATION_TICKS);
+		setHiddenFromLocatorBar(player, true);
 		broadcastStretch(player);
 	}
 
@@ -66,9 +79,26 @@ public final class StretchManager {
 			int remaining = entry.getValue() - 1;
 			if (remaining <= 0) {
 				iterator.remove();
+				ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+				if (player != null) {
+					setHiddenFromLocatorBar(player, false);
+				}
 			} else {
 				entry.setValue(remaining);
 			}
+		}
+	}
+
+	private static void setHiddenFromLocatorBar(ServerPlayer player, boolean hidden) {
+		AttributeInstance range = player.getAttribute(Attributes.WAYPOINT_TRANSMIT_RANGE);
+		if (range == null) {
+			return;
+		}
+
+		if (hidden) {
+			range.addOrUpdateTransientModifier(HIDE_FROM_LOCATOR_BAR);
+		} else {
+			range.removeModifier(HIDE_FROM_LOCATOR_BAR.id());
 		}
 	}
 
