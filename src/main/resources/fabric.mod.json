@@ -3,11 +3,18 @@
 	"id": "morning-stretch",
 	"version": "${version}",
 	"name": "Morning Stretch",
-	"description": "Protahování po probuzení z postele a na klávesovou zkratku.",
+	"description": "Your character stretches after waking up in a bed, or any time on a key press (R).",
 	"authors": [
-		"Lukas"
+		"Matyáš Záruba",
+		"Lukáš Záruba"
 	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/morning-stretch",
+		"sources": "https://github.com/LZaruba/morning-stretch",
+		"issues": "https://github.com/LZaruba/morning-stretch/issues"
+	},
 	"license": "LGPL-3.0-or-later",
+	"icon": "assets/morning-stretch/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [

@@ -1,6 +1,7 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
+	id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
 }
 
 version = project.mod_version
@@ -88,5 +89,40 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+// Release notes for the current version: the "## <version>" section of CHANGELOG.md.
+def releaseChangelog = providers.provider {
+	def section = file("CHANGELOG.md").text.split(/(?m)^## /).find { it.readLines().first().trim() == project.version.toString() }
+	if (section == null) {
+		throw new GradleException("CHANGELOG.md has no section for version ${project.version}")
+	}
+	section.readLines().drop(1).join("\n").trim()
+}
+
+// Publishes to Modrinth and GitHub Releases; see .github/workflows/release.yml.
+// Without MODRINTH_TOKEN (e.g. locally) it runs as a dry run into build/publishMods.
+publishMods {
+	file = jar.archiveFile
+	changelog = releaseChangelog
+	type = STABLE
+	displayName = "Morning Stretch ${project.version}"
+	modLoaders.add("fabric")
+	dryRun = providers.environmentVariable("MODRINTH_TOKEN").orNull == null
+
+	modrinth {
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").orElse("dry-run")
+		minecraftVersions.add(project.minecraft_version)
+		requires("fabric-api")
+		projectDescription = providers.fileContents(layout.projectDirectory.file("docs/modrinth-description.md")).asText
+	}
+
+	github {
+		accessToken = providers.environmentVariable("GITHUB_TOKEN")
+		repository = "LZaruba/morning-stretch"
+		commitish = "main"
+		tagName = "v${project.version}"
 	}
 }
