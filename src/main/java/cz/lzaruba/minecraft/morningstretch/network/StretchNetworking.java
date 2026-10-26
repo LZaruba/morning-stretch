@@ -10,14 +10,14 @@ public final class StretchNetworking {
 	}
 
 	public static void registerPayloads() {
-		PayloadTypeRegistry.playS2C().register(StretchPayload.TYPE, StretchPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(StretchRequestPayload.TYPE, StretchRequestPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(StretchPayload.TYPE, StretchPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(StretchRequestPayload.TYPE, StretchRequestPayload.CODEC);
 	}
 
 	public static void registerServerHandlers() {
 		ServerPlayNetworking.registerGlobalReceiver(StretchRequestPayload.TYPE, (payload, context) -> {
 			ServerPlayer player = context.player();
-			player.getServer().execute(() -> StretchManager.startStretch(player));
+			context.server().execute(() -> StretchManager.startStretch(player));
 		});
 	}
 }

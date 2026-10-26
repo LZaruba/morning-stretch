@@ -50,7 +50,7 @@ help:
 	@echo ""
 
 check-java:
-	@java -version 2>&1 | head -1 || (echo "Chybí Java. Nainstaluj JDK 21+: https://adoptium.net/" && exit 1)
+	@java -version 2>&1 | head -1 || (echo "Chybí Java. Nainstaluj JDK 17+ (doporučeno 25): https://adoptium.net/" && exit 1)
 
 build: check-java
 	$(GRADLE) $(GRADLE_FLAGS) build
@@ -67,8 +67,8 @@ deploy: build
 	@cp "$(JAR)" "$(MODS_DIR)/"
 	@echo "✓ Nasazeno do: $(MODS_DIR)/$(MOD_NAME)-$(MOD_VERSION).jar"
 	@echo ""
-	@echo "  Nezapomeň mít nainstalované Fabric Loader + Fabric API pro 1.21.1"
-	@echo "  a spusť profil 'Fabric 1.21.1' v Minecraft launcheru."
+	@echo "  Nezapomeň mít nainstalované Fabric Loader + Fabric API pro 26.3"
+	@echo "  a spusť profil 'Fabric 26.3' v Minecraft launcheru."
 
 run: check-java
 	@echo "→ Spouštím testovací klienta (mod se načte automaticky)..."
@@ -79,9 +79,9 @@ play: deploy
 ifeq ($(UNAME_S),Darwin)
 	@open -a "Minecraft" 2>/dev/null || open "minecraft://"
 else ifeq ($(UNAME_S),Linux)
-	@minecraft-launcher 2>/dev/null || echo "Spusť Minecraft Launcher ručně a vyber profil Fabric 1.21.1"
+	@minecraft-launcher 2>/dev/null || echo "Spusť Minecraft Launcher ručně a vyber profil Fabric 26.3"
 else
-	@cmd.exe /c start minecraft:// 2>/dev/null || echo "Spusť Minecraft Launcher ručně a vyber profil Fabric 1.21.1"
+	@cmd.exe /c start minecraft:// 2>/dev/null || echo "Spusť Minecraft Launcher ručně a vyber profil Fabric 26.3"
 endif
 
 all: deploy run
