@@ -5,7 +5,9 @@
 	"client": [
 		"PlayerModelMixin",
 		"FirstPersonHandsAndItemsRendererMixin",
-		"LocalPlayerMixin"
+		"LocalPlayerMixin",
+		"AvatarRendererMixin",
+		"ClientSuggestionProviderMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

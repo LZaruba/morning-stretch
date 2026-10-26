@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "cz.lzaruba.minecraft.morningstretch.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"EntitySelectorMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
