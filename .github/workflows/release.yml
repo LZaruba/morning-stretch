@@ -1,0 +1,124 @@
+# Release: started by hand from the Actions tab. Takes main, bumps the version,
+# commits the release (gradle.properties + CHANGELOG.md), tags it and publishes
+# the mod to Modrinth and GitHub Releases.
+#
+# Needs the MODRINTH_TOKEN repository secret (a Modrinth PAT with the
+# "Read projects", "Write projects" and "Create versions" scopes).
+
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Part of the version to increase (ignored when an exact version is given)
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+      version:
+        description: Exact version to release instead, e.g. 1.0.0 for the first release
+        type: string
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  MODRINTH_PROJECT: morning-stretch
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: resolve Modrinth project
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          if [ -z "$MODRINTH_TOKEN" ]; then
+            echo "::error::The MODRINTH_TOKEN repository secret is not set"
+            exit 1
+          fi
+          id=$(curl -fsS -H "Authorization: $MODRINTH_TOKEN" "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT" | jq -r .id)
+          echo "MODRINTH_PROJECT_ID=$id" >> "$GITHUB_ENV"
+
+      - name: determine version
+        env:
+          BUMP: ${{ inputs.bump }}
+          REQUESTED: ${{ inputs.version }}
+        run: |
+          current=$(sed -n 's/^mod_version=//p' gradle.properties)
+          if [ -n "$REQUESTED" ]; then
+            next="$REQUESTED"
+          else
+            IFS=. read -r major minor patch <<< "$current"
+            case "$BUMP" in
+              major) next="$((major + 1)).0.0" ;;
+              minor) next="$major.$((minor + 1)).0" ;;
+              *) next="$major.$minor.$((patch + 1))" ;;
+            esac
+          fi
+          if ! [[ "$next" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid version '$next'"
+            exit 1
+          fi
+          if git rev-parse -q --verify "refs/tags/v$next" > /dev/null; then
+            echo "::error::Version $next is already released (tag v$next exists)"
+            exit 1
+          fi
+          echo "Releasing $next (current $current)"
+          echo "VERSION=$next" >> "$GITHUB_ENV"
+
+      - name: create release commit and tag
+        run: |
+          sed -i "s/^mod_version=.*/mod_version=$VERSION/" gradle.properties
+          # Turn the "## Unreleased" section into "## <version>" and start a new empty one.
+          python3 - <<'EOF'
+          import os, re, sys, pathlib
+          path = pathlib.Path("CHANGELOG.md")
+          head, found, rest = path.read_text().partition("## Unreleased\n")
+          if not found:
+              sys.exit("::error::CHANGELOG.md has no '## Unreleased' section")
+          if not re.split(r"(?m)^## ", rest, maxsplit=1)[0].strip():
+              sys.exit("::error::The Unreleased section of CHANGELOG.md is empty")
+          path.write_text(f"{head}## Unreleased\n\n## {os.environ['VERSION']}\n{rest}")
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Release $VERSION"
+          git tag -a "v$VERSION" -m "Morning Stretch $VERSION"
+
+      - name: build
+        run: ./gradlew build
+
+      - name: push release commit and tag
+        run: git push origin HEAD:main "v$VERSION"
+
+      - name: publish to Modrinth and GitHub Releases
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishMods
+
+      - name: capture release artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: morning-stretch-${{ env.VERSION }}
+          path: build/libs/

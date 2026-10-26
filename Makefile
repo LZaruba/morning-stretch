@@ -11,7 +11,7 @@
 #   make deploy MINECRAFT_DIR="/cesta/k/minecraft"
 
 MOD_NAME     := morning-stretch
-MOD_VERSION  := 1.0.0
+MOD_VERSION  := $(shell sed -n 's/^mod_version=//p' gradle.properties)
 JAR          := build/libs/$(MOD_NAME)-$(MOD_VERSION).jar
 GRADLE       := ./gradlew
 GRADLE_FLAGS := --no-daemon
