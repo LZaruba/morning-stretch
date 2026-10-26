@@ -4,6 +4,8 @@ Entries under **Unreleased** are optional: the release workflow turns them into 
 
 ## Unreleased
 
+## 1.0.1
+
 First release, for Minecraft 26.3.
 
 - Stretch animation after waking up in a bed and on a key press (R by default)
