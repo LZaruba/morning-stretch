@@ -3,7 +3,7 @@
 # the mod to Modrinth and GitHub Releases. It also syncs the Modrinth project page
 # (summary, description, tags, license, links, icon, gallery) from the repository.
 #
-# Needs the MODRINTH_TOKEN repository secret (a Modrinth PAT with the
+# Needs the MODRINTH_TOKEN secret in the "default" environment (a Modrinth PAT with the
 # "Read projects", "Write projects" and "Create versions" scopes).
 
 name: release
@@ -33,6 +33,8 @@ env:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    # MODRINTH_TOKEN is stored as a secret of the 'default' environment.
+    environment: default
     steps:
       - name: checkout main
         uses: actions/checkout@v6
@@ -54,7 +56,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           if [ -z "$MODRINTH_TOKEN" ]; then
-            echo "::error::The MODRINTH_TOKEN repository secret is not set"
+            echo "::error::The MODRINTH_TOKEN secret of the default environment is not set"
             exit 1
           fi
           id=$(curl -fsS -H "Authorization: $MODRINTH_TOKEN" "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT" | jq -r .id)
