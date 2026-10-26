@@ -45,10 +45,10 @@ The development client has a `/stretchtest spawn` command that places a mannequi
 
 ## Releasing
 
-1. Add the changes under **Unreleased** in [CHANGELOG.md](CHANGELOG.md) and merge them to `main`.
+1. Merge the changes to `main`. Pull request titles end up in the changelog, so write them for players.
 2. Run the **release** workflow (*Actions → release → Run workflow*). Pick which part of the version to bump (`patch`, `minor`, `major`) or type an exact version.
 
-The workflow takes `main`, bumps `mod_version` in `gradle.properties`, turns the Unreleased changelog section into the version section, commits and tags the release (`v<version>`), and publishes the mod to Modrinth and GitHub Releases.
+The workflow takes `main`, bumps `mod_version` in `gradle.properties` and writes the changelog section for the version into [CHANGELOG.md](CHANGELOG.md): the hand-written **Unreleased** section if there is one, otherwise the list of pull requests merged since the last release ([tools/release_changelog.py](tools/release_changelog.py)). Then it commits and tags the release (`v<version>`) and publishes the mod to Modrinth and GitHub Releases with that changelog.
 
 It needs the `MODRINTH_TOKEN` secret in the `default` environment (*Settings → Environments*): a Modrinth personal access token with the *Read projects*, *Write projects* and *Create versions* scopes.
 
