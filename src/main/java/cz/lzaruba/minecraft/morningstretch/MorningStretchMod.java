@@ -1,7 +1,7 @@
-package cz.lzaruba.minecraft.stretch;
+package cz.lzaruba.minecraft.morningstretch;
 
-import cz.lzaruba.minecraft.stretch.network.StretchNetworking;
-import cz.lzaruba.minecraft.stretch.stretch.StretchManager;
+import cz.lzaruba.minecraft.morningstretch.network.StretchNetworking;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -10,8 +10,8 @@ import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MineraftStretchMod implements ModInitializer {
-	public static final String MOD_ID = "mineraft-stretch";
+public class MorningStretchMod implements ModInitializer {
+	public static final String MOD_ID = "morning-stretch";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
@@ -33,7 +33,7 @@ public class MineraftStretchMod implements ModInitializer {
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> StretchManager.tick(server));
 
-		LOGGER.info("Mineraft Stretch loaded");
+		LOGGER.info("Morning Stretch loaded");
 	}
 
 	public static ResourceLocation id(String path) {

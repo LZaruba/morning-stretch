@@ -1,8 +1,8 @@
-package cz.lzaruba.minecraft.stretch.client.stretch;
+package cz.lzaruba.minecraft.morningstretch.client.stretch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import cz.lzaruba.minecraft.stretch.stretch.StretchAnimations;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchAnimations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.HumanoidArm;

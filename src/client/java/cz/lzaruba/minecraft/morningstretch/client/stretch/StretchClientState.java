@@ -1,8 +1,8 @@
-package cz.lzaruba.minecraft.stretch.client.stretch;
+package cz.lzaruba.minecraft.morningstretch.client.stretch;
 
-import cz.lzaruba.minecraft.stretch.stretch.StretchAnimations;
-import cz.lzaruba.minecraft.stretch.stretch.StretchManager;
-import cz.lzaruba.minecraft.stretch.stretch.StretchPose;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchAnimations;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchManager;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchPose;
 
 import java.util.Iterator;
 import java.util.Map;

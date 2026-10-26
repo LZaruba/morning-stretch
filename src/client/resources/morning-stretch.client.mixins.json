@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "cz.lzaruba.minecraft.stretch.client.mixin",
+	"package": "cz.lzaruba.minecraft.morningstretch.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"PlayerModelMixin",

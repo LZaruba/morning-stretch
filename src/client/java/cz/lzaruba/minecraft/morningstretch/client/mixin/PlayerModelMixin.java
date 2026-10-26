@@ -1,8 +1,8 @@
-package cz.lzaruba.minecraft.stretch.client.mixin;
+package cz.lzaruba.minecraft.morningstretch.client.mixin;
 
-import cz.lzaruba.minecraft.stretch.client.stretch.StretchClientState;
-import cz.lzaruba.minecraft.stretch.stretch.StretchAnimations;
-import cz.lzaruba.minecraft.stretch.stretch.StretchPose;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.StretchClientState;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchAnimations;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchPose;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -42,7 +42,7 @@ public abstract class PlayerModelMixin {
 	public ModelPart rightLeg;
 
 	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-	private void mineraftstretch$applyStretchPose(
+	private void morningstretch$applyStretchPose(
 			LivingEntity entity,
 			float limbSwing,
 			float limbSwingAmount,

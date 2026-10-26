@@ -1,6 +1,6 @@
-package cz.lzaruba.minecraft.stretch.network;
+package cz.lzaruba.minecraft.morningstretch.network;
 
-import cz.lzaruba.minecraft.stretch.MineraftStretchMod;
+import cz.lzaruba.minecraft.morningstretch.MorningStretchMod;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import java.util.UUID;
 
 public record StretchPayload(UUID playerUuid) implements CustomPacketPayload {
-	public static final Type<StretchPayload> TYPE = new Type<>(MineraftStretchMod.id("stretch"));
+	public static final Type<StretchPayload> TYPE = new Type<>(MorningStretchMod.id("stretch"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, StretchPayload> CODEC = StreamCodec.composite(
 			StreamCodec.of(

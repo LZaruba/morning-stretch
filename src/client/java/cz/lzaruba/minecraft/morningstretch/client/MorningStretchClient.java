@@ -1,10 +1,10 @@
-package cz.lzaruba.minecraft.stretch.client;
+package cz.lzaruba.minecraft.morningstretch.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import cz.lzaruba.minecraft.stretch.client.stretch.StretchClientState;
-import cz.lzaruba.minecraft.stretch.client.stretch.StretchSoundPlayer;
-import cz.lzaruba.minecraft.stretch.network.StretchPayload;
-import cz.lzaruba.minecraft.stretch.network.StretchRequestPayload;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.StretchClientState;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.StretchSoundPlayer;
+import cz.lzaruba.minecraft.morningstretch.network.StretchPayload;
+import cz.lzaruba.minecraft.morningstretch.network.StretchRequestPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -14,13 +14,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-public class MineraftStretchClient implements ClientModInitializer {
+public class MorningStretchClient implements ClientModInitializer {
 	private static KeyMapping stretchKey;
 
 	@Override
 	public void onInitializeClient() {
 		stretchKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-				"key.mineraft-stretch.stretch",
+				"key.morning-stretch.stretch",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_R,
 				KeyMapping.CATEGORY_MISC
@@ -32,13 +32,14 @@ public class MineraftStretchClient implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (stretchKey.consumeClick()) {
-				if (client.player == null) {
+				if (client.player == null || StretchClientState.isStretching(client.player.getId())) {
 					continue;
 				}
 
 				StretchClientState.start(client.player.getUUID(), client.player.getId());
 
-				if (client.getConnection() != null) {
+				// The server may not have the mod; then the stretch stays local only.
+				if (client.getConnection() != null && ClientPlayNetworking.canSend(StretchRequestPayload.TYPE)) {
 					ClientPlayNetworking.send(new StretchRequestPayload());
 				}
 			}
@@ -59,6 +60,11 @@ public class MineraftStretchClient implements ClientModInitializer {
 		}
 
 		if (player == null) {
+			return;
+		}
+
+		// The local player already started the stretch on key press; ignore the server echo.
+		if (player == client.player && StretchClientState.isStretching(player.getId())) {
 			return;
 		}
 

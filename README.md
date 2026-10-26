@@ -1,4 +1,4 @@
-# Mineraft Stretch
+# Morning Stretch
 
 Fabric mod pro **Minecraft 1.21.1**, který přidá animaci protahování postavy.
 
@@ -29,7 +29,7 @@ Tento README je psané pro někoho, kdo s Minecraft mody ještě nepracoval. Pro
 1. **Minecraft Java Edition 1.21.1** (ne Bedrock, ne novější verze)
 2. **Fabric Loader** — „motor“, který umožní spouštět mody
 3. **Fabric API** — knihovna, kterou tento mod vyžaduje
-4. **Samotný mod** — soubor `mineraft-stretch-1.0.0.jar`
+4. **Samotný mod** — soubor `morning-stretch-1.0.0.jar`
 
 ### Krok 1: Nainstaluj Fabric
 
@@ -51,7 +51,7 @@ Máš dvě možnosti:
 
 **B) Sestavit ho sám** (viz [Část 2](#část-2-vývoj-a-testování-ze-zdrojového-kódu))
 
-Soubor `mineraft-stretch-1.0.0.jar` zkopíruj do složky s mody:
+Soubor `morning-stretch-1.0.0.jar` zkopíruj do složky s mody:
 
 | Operační systém | Cesta ke složce `mods` |
 |---|---|
@@ -66,7 +66,7 @@ Složku `mods` vytvoř, pokud neexistuje.
 1. Otevři Minecraft Launcher
 2. Vyber profil **Fabric 1.21.1**
 3. Klikni **Hrát**
-4. V hlavním menu jdi do **Mods** (nebo **Modifikace**) — měl bys vidět **Mineraft Stretch**
+4. V hlavním menu jdi do **Mods** (nebo **Modifikace**) — měl bys vidět **Morning Stretch**
 
 Pokud mod v seznamu není, zkontroluj [řešení problémů](#řešení-problémů).
 
@@ -119,7 +119,7 @@ Mělo by se zobrazit něco jako `openjdk version "21.x.x"`.
 
 ```bash
 git clone <url-repozitáře>
-cd mineraft-stretch
+cd morning-stretch
 ```
 
 ### Rychlé příkazy přes Make
@@ -137,7 +137,7 @@ make play     # deploy + otevře Minecraft Launcher
 
 | Příkaz | Co dělá |
 |---|---|
-| `make build` | Sestaví `build/libs/mineraft-stretch-1.0.0.jar` |
+| `make build` | Sestaví `build/libs/morning-stretch-1.0.0.jar` |
 | `make deploy` | Zkopíruje JAR do `~/Library/Application Support/minecraft/mods` (macOS) |
 | `make run` | Spustí `./gradlew runClient` — mod se načte automaticky, deploy není nutný |
 | `make all` | Nejdřív deployne do `.minecraft/mods`, pak spustí testovacího klienta |
@@ -181,7 +181,7 @@ gradlew.bat runClient
 Hotový mod najdeš v:
 
 ```
-build/libs/mineraft-stretch-1.0.0.jar
+build/libs/morning-stretch-1.0.0.jar
 ```
 
 Tento soubor pak zkopíruj do složky `mods` (viz [Krok 3](#krok-3-nainstaluj-tento-mod)).
@@ -189,7 +189,7 @@ Tento soubor pak zkopíruj do složky `mods` (viz [Krok 3](#krok-3-nainstaluj-te
 ### Otevření v IntelliJ IDEA (volitelné)
 
 1. Spusť IntelliJ IDEA
-2. **Open** → vyber složku `mineraft-stretch`
+2. **Open** → vyber složku `morning-stretch`
 3. Otevři soubor `build.gradle` a potvrď import Gradle projektu
 4. Počkej, až Gradle stáhne závislosti
 5. Vpravo nahoře by se měla objevit run konfigurace **Minecraft Client**
@@ -203,7 +203,7 @@ Projdi tyto scénáře a ověř, že vše funguje.
 ### Test 1: Mod se načte
 
 - [ ] Spusť hru s Fabric profilem
-- [ ] V menu **Mods** vidíš **Mineraft Stretch**
+- [ ] V menu **Mods** vidíš **Morning Stretch**
 - [ ] Verze je **1.0.0**
 
 ### Test 2: Ruční protahování
@@ -244,18 +244,18 @@ Projdi tyto scénáře a ověř, že vše funguje.
 ## Struktura projektu
 
 ```
-mineraft-stretch/
-├── src/main/java/cz/lzaruba/minecraft/stretch/
-│   ├── MineraftStretchMod.java      # hlavní vstupní bod (server + společná logika)
+morning-stretch/
+├── src/main/java/cz/lzaruba/minecraft/morningstretch/
+│   ├── MorningStretchMod.java       # hlavní vstupní bod (server + společná logika)
 │   ├── network/                     # síťové pakety mezi klientem a serverem
 │   └── stretch/                     # logika protahování na serveru
-├── src/client/java/cz/lzaruba/minecraft/stretch/client/
-│   ├── MineraftStretchClient.java   # klávesová zkratka, client síť
+├── src/client/java/cz/lzaruba/minecraft/morningstretch/client/
+│   ├── MorningStretchClient.java    # klávesová zkratka, client síť
 │   ├── stretch/                     # stav animace na klientovi
 │   └── mixin/                       # úprava vzhledu postavy (pozice rukou)
 ├── src/main/resources/
 │   ├── fabric.mod.json              # metadata modu
-│   └── assets/mineraft-stretch/lang/ # překlady (čeština, angličtina)
+│   └── assets/morning-stretch/lang/ # překlady (čeština, angličtina)
 ├── build.gradle                     # build konfigurace
 └── gradle.properties                # verze Minecraftu, Fabric API atd.
 ```
@@ -282,7 +282,7 @@ mineraft-stretch/
 
 - Chybí **Fabric API** — nejčastější příčina
 - Špatná verze Javy — mod vyžaduje **Java 21+**
-- Konflikt s jiným modem — zkus spustit jen Fabric API + Mineraft Stretch
+- Konflikt s jiným modem — zkus spustit jen Fabric API + Morning Stretch
 
 ### `./gradlew runClient` nefunguje
 
@@ -311,7 +311,7 @@ mineraft-stretch/
 | Mod loader | Fabric |
 | Fabric API | 0.116.13+1.21.1 |
 | Java | 21+ |
-| Mod ID | `mineraft-stretch` |
+| Mod ID | `morning-stretch` |
 | Výchozí klávesa | `R` |
 | Délka animace | 80 ticků (~4 s) |
 | Licence | LGPL-3.0-or-later |

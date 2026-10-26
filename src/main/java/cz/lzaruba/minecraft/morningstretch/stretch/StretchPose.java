@@ -1,4 +1,4 @@
-package cz.lzaruba.minecraft.stretch.stretch;
+package cz.lzaruba.minecraft.morningstretch.stretch;
 
 public record StretchPose(
 		float leftArmXRot,
