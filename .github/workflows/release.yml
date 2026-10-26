@@ -35,6 +35,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    timeout-minutes: 45
     # MODRINTH_TOKEN is stored as a secret of the 'default' environment.
     environment: default
     steps:
