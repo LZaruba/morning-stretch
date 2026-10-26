@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -69,7 +68,6 @@ public final class StretchManager {
 				iterator.remove();
 			} else {
 				entry.setValue(remaining);
-				slowPlayerDuringStretch(server, entry.getKey());
 			}
 		}
 	}
@@ -93,17 +91,6 @@ public final class StretchManager {
 				entry.setValue(remaining);
 			}
 		}
-	}
-
-	private static void slowPlayerDuringStretch(MinecraftServer server, UUID playerUuid) {
-		ServerPlayer player = server.getPlayerList().getPlayer(playerUuid);
-		if (player == null) {
-			return;
-		}
-
-		player.setSprinting(false);
-		Vec3 velocity = player.getDeltaMovement();
-		player.setDeltaMovement(velocity.x * 0.82, velocity.y, velocity.z * 0.82);
 	}
 
 	private static void broadcastStretch(ServerPlayer player) {
