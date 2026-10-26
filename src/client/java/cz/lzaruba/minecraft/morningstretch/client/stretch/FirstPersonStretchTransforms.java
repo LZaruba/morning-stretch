@@ -43,8 +43,8 @@ public final class FirstPersonStretchTransforms {
 		poseStack.translate(side * TRAVEL_X * blend, TRAVEL_Y * blend, TRAVEL_Z * blend);
 
 		// Secondary: small rotation to lift/angle the forearm.
-		poseStack.mulPose(Axis.ZP.rotationDegrees(side * ROLL_DEGREES * blend));
-		poseStack.mulPose(Axis.XP.rotationDegrees(PITCH_DEGREES * blend));
+		poseStack.rotateDegrees(Axis.ZP, side * ROLL_DEGREES * blend);
+		poseStack.rotateDegrees(Axis.XP, PITCH_DEGREES * blend);
 	}
 
 	public static boolean isStretching(int entityId) {

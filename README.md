@@ -1,6 +1,6 @@
 # Morning Stretch
 
-Fabric mod pro **Minecraft 1.21.1**, který přidá animaci protahování postavy.
+Fabric mod pro **Minecraft 26.3**, který přidá animaci protahování postavy.
 
 Postava zvedne ruce nad hlavu, mírně je roztáhne a nakloní hlavu — jako když se člověk protáhne po probuzení.
 
@@ -26,7 +26,7 @@ Tento README je psané pro někoho, kdo s Minecraft mody ještě nepracoval. Pro
 
 ### Co budeš potřebovat
 
-1. **Minecraft Java Edition 1.21.1** (ne Bedrock, ne novější verze)
+1. **Minecraft Java Edition 26.3** (ne Bedrock, ne novější verze)
 2. **Fabric Loader** — „motor“, který umožní spouštět mody
 3. **Fabric API** — knihovna, kterou tento mod vyžaduje
 4. **Samotný mod** — soubor `morning-stretch-1.0.0.jar`
@@ -34,14 +34,14 @@ Tento README je psané pro někoho, kdo s Minecraft mody ještě nepracoval. Pro
 ### Krok 1: Nainstaluj Fabric
 
 1. Stáhni instalátor z [fabricmc.net/use](https://fabricmc.net/use/)
-2. Spusť ho, vyber verzi **Minecraft 1.21.1**
+2. Spusť ho, vyber verzi **Minecraft 26.3**
 3. Klikni na **Install**
-4. V Minecraft launcheru se ti objeví nový profil **Fabric 1.21.1**
+4. V Minecraft launcheru se ti objeví nový profil **Fabric 26.3**
 
 ### Krok 2: Nainstaluj Fabric API
 
-1. Stáhni **Fabric API pro 1.21.1** z [Modrinth](https://modrinth.com/mod/fabric-api) nebo [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-2. Ujisti se, že verze odpovídá Minecraftu **1.21.1**
+1. Stáhni **Fabric API pro 26.3** z [Modrinth](https://modrinth.com/mod/fabric-api) nebo [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+2. Ujisti se, že verze odpovídá Minecraftu **26.3**
 
 ### Krok 3: Nainstaluj tento mod
 
@@ -64,7 +64,7 @@ Složku `mods` vytvoř, pokud neexistuje.
 ### Krok 4: Spusť hru
 
 1. Otevři Minecraft Launcher
-2. Vyber profil **Fabric 1.21.1**
+2. Vyber profil **Fabric 26.3**
 3. Klikni **Hrát**
 4. V hlavním menu jdi do **Mods** (nebo **Modifikace**) — měl bys vidět **Morning Stretch**
 
@@ -100,20 +100,23 @@ Tato část je pro tebe, pokud chceš mod upravovat nebo testovat přímo z repo
 
 | Nástroj | Verze | K čemu slouží |
 |---|---|---|
-| **Java (JDK)** | 21 nebo novější | Kompilace a spuštění |
+| **Java (JDK)** | 17 nebo novější (doporučeno 25) | Spuštění Gradlu |
 | **Git** | libovolná | Stažení zdrojového kódu |
 | **IDE** (volitelné) | IntelliJ IDEA doporučeno | Pohodlnější úpravy kódu |
 
 #### Instalace Javy
 
-- Stáhni **JDK 21** z [Adoptium](https://adoptium.net/)
+- Stáhni **JDK 25** z [Adoptium](https://adoptium.net/)
 - Ověř instalaci v terminálu:
 
 ```bash
 java -version
 ```
 
-Mělo by se zobrazit něco jako `openjdk version "21.x.x"`.
+Mělo by se zobrazit něco jako `openjdk version "25.x.x"`.
+
+Mod se kompiluje pro **Javu 25**. Pokud ji nemáš nainstalovanou, Gradle si ji při prvním buildu stáhne sám
+(do `~/.gradle/jdks`, viz `gradle/gradle-daemon-jvm.properties`). Ke spuštění Gradlu stačí jakákoli Java 17+.
 
 ### Stažení projektu
 
@@ -141,7 +144,7 @@ make play     # deploy + otevře Minecraft Launcher
 | `make deploy` | Zkopíruje JAR do `~/Library/Application Support/minecraft/mods` (macOS) |
 | `make run` | Spustí `./gradlew runClient` — mod se načte automaticky, deploy není nutný |
 | `make all` | Nejdřív deployne do `.minecraft/mods`, pak spustí testovacího klienta |
-| `make play` | Deployne mod a otevře běžný Minecraft Launcher (profil Fabric 1.21.1) |
+| `make play` | Deployne mod a otevře běžný Minecraft Launcher (profil Fabric 26.3) |
 
 Vlastní cesta k Minecraftu:
 
@@ -273,20 +276,20 @@ morning-stretch/
 
 ### Mod se nezobrazuje v seznamu modů
 
-- Ověř, že hraješ na profilu **Fabric 1.21.1** (ne vanilla)
+- Ověř, že hraješ na profilu **Fabric 26.3** (ne vanilla)
 - Zkontroluj, že máš nainstalované **Fabric API**
 - Ujisti se, že JAR je ve složce `mods`, ne v podsložce
-- Verze modu musí odpovídat Minecraftu **1.21.1**
+- Verze modu musí odpovídat Minecraftu **26.3**
 
 ### Hra spadne při startu
 
 - Chybí **Fabric API** — nejčastější příčina
-- Špatná verze Javy — mod vyžaduje **Java 21+**
+- Špatná verze Javy — mod vyžaduje **Java 25+** (oficiální launcher ji pro 26.3 dodává sám)
 - Konflikt s jiným modem — zkus spustit jen Fabric API + Morning Stretch
 
 ### `./gradlew runClient` nefunguje
 
-- Nemáš nainstalovanou Javu 21: `java -version`
+- Nemáš nainstalovanou Javu 17+ (`java -version`), nebo se nepodařilo stáhnout JDK 25 — zkontroluj připojení k internetu
 - První build trvá dlouho — počkej, až Gradle stáhne vše
 - Na macOS/Linux dej skriptu práva: `chmod +x gradlew`
 
@@ -307,10 +310,11 @@ morning-stretch/
 
 | Položka | Hodnota |
 |---|---|
-| Minecraft | 1.21.1 |
+| Minecraft | 26.3 |
 | Mod loader | Fabric |
-| Fabric API | 0.116.13+1.21.1 |
-| Java | 21+ |
+| Fabric Loader | 0.20.1+ |
+| Fabric API | 0.165.0+26.3 |
+| Java | 25+ |
 | Mod ID | `morning-stretch` |
 | Výchozí klávesa | `R` |
 | Délka animace | 80 ticků (~4 s) |

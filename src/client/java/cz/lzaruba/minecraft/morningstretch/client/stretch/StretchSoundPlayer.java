@@ -2,8 +2,10 @@ package cz.lzaruba.minecraft.morningstretch.client.stretch;
 
 import cz.lzaruba.minecraft.morningstretch.stretch.StretchManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.animal.wolf.WolfSoundVariants;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.EnumSet;
@@ -69,6 +71,11 @@ public final class StretchSoundPlayer {
 		);
 	}
 
+	// Wolf sounds are per-variant since 1.21.5; use the classic adult pant.
+	private static SoundEvent classicWolfPant() {
+		return SoundEvents.WOLF_SOUNDS.get(WolfSoundVariants.SoundSet.CLASSIC).adultSounds().pantSound().value();
+	}
+
 	private enum StretchSoundCue {
 		INHALE(0.04f, SoundEvents.PLAYER_BREATH, 0.55f, 0.52f),
 		ARMS_RISING(0.22f, SoundEvents.HORSE_BREATHE, 0.18f, 1.15f),
@@ -76,7 +83,7 @@ public final class StretchSoundPlayer {
 		YAWN_BREATH(0.44f, SoundEvents.PLAYER_BREATH, 0.38f, 0.38f),
 		HOLD(0.58f, SoundEvents.PLAYER_BREATH, 0.22f, 0.62f),
 		EXHALE(0.76f, SoundEvents.PLAYER_BREATH, 0.48f, 0.88f),
-		RELEASE(0.90f, SoundEvents.WOLF_PANT, 0.16f, 1.35f);
+		RELEASE(0.90f, classicWolfPant(), 0.16f, 1.35f);
 
 		private final float triggerProgress;
 		private final net.minecraft.sounds.SoundEvent sound;
