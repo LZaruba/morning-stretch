@@ -101,7 +101,8 @@ def releaseChangelog = providers.provider {
 	section.readLines().drop(1).join("\n").trim()
 }
 
-// Publishes to Modrinth and GitHub Releases; see .github/workflows/release.yml.
+// Publishes a version to Modrinth and GitHub Releases; see .github/workflows/release.yml.
+// The Modrinth project page itself is synced by tools/sync_modrinth_project.py.
 // Without MODRINTH_TOKEN (e.g. locally) it runs as a dry run into build/publishMods.
 publishMods {
 	file = jar.archiveFile
@@ -116,7 +117,8 @@ publishMods {
 		projectId = providers.environmentVariable("MODRINTH_PROJECT_ID").orElse("dry-run")
 		minecraftVersions.add(project.minecraft_version)
 		requires("fabric-api")
-		projectDescription = providers.fileContents(layout.projectDirectory.file("docs/modrinth-description.md")).asText
+		// Works on either side alone, with extra features when both have it.
+		environment = CLIENT_OR_SERVER_PREFERS_BOTH
 	}
 
 	github {

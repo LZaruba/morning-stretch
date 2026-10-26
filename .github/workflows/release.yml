@@ -1,6 +1,7 @@
 # Release: started by hand from the Actions tab. Takes main, bumps the version,
 # commits the release (gradle.properties + CHANGELOG.md), tags it and publishes
-# the mod to Modrinth and GitHub Releases.
+# the mod to Modrinth and GitHub Releases. It also syncs the Modrinth project page
+# (summary, description, tags, license, links, icon, gallery) from the repository.
 #
 # Needs the MODRINTH_TOKEN repository secret (a Modrinth PAT with the
 # "Read projects", "Write projects" and "Create versions" scopes).
@@ -58,6 +59,11 @@ jobs:
           fi
           id=$(curl -fsS -H "Authorization: $MODRINTH_TOKEN" "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT" | jq -r .id)
           echo "MODRINTH_PROJECT_ID=$id" >> "$GITHUB_ENV"
+
+      - name: sync Modrinth project page
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: python3 tools/sync_modrinth_project.py
 
       - name: determine version
         env:
