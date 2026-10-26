@@ -32,13 +32,14 @@ public class MorningStretchClient implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (stretchKey.consumeClick()) {
-				if (client.player == null) {
+				if (client.player == null || StretchClientState.isStretching(client.player.getId())) {
 					continue;
 				}
 
 				StretchClientState.start(client.player.getUUID(), client.player.getId());
 
-				if (client.getConnection() != null) {
+				// The server may not have the mod; then the stretch stays local only.
+				if (client.getConnection() != null && ClientPlayNetworking.canSend(StretchRequestPayload.TYPE)) {
 					ClientPlayNetworking.send(new StretchRequestPayload());
 				}
 			}
@@ -59,6 +60,11 @@ public class MorningStretchClient implements ClientModInitializer {
 		}
 
 		if (player == null) {
+			return;
+		}
+
+		// The local player already started the stretch on key press; ignore the server echo.
+		if (player == client.player && StretchClientState.isStretching(player.getId())) {
 			return;
 		}
 

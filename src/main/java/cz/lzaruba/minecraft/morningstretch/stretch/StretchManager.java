@@ -108,12 +108,19 @@ public final class StretchManager {
 
 	private static void broadcastStretch(ServerPlayer player) {
 		StretchPayload payload = new StretchPayload(player.getUUID());
-		ServerPlayNetworking.send(player, payload);
+		sendIfSupported(player, payload);
 
 		for (ServerPlayer viewer : PlayerLookup.tracking(player)) {
 			if (viewer != player) {
-				ServerPlayNetworking.send(viewer, payload);
+				sendIfSupported(viewer, payload);
 			}
+		}
+	}
+
+	// Skip players whose client does not have the mod installed.
+	private static void sendIfSupported(ServerPlayer receiver, StretchPayload payload) {
+		if (ServerPlayNetworking.canSend(receiver, StretchPayload.TYPE)) {
+			ServerPlayNetworking.send(receiver, payload);
 		}
 	}
 }
