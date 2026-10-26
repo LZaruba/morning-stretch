@@ -30,7 +30,7 @@ Code and everything in it (identifiers, comments, commit messages) is written in
 
 **The pull request title goes into the release changelog** shown to players on Modrinth and GitHub, so write it for players: "Stretch no longer restarts when pressing R repeatedly" rather than "Fix StretchClientState".
 
-Every pull request is built automatically and reviewed by a maintainer before it is merged. Workflows from first-time contributors start after a maintainer approves them.
+Every pull request is built automatically and reviewed by a maintainer before it is merged. Workflows from outside contributors start after a maintainer approves them.
 
 ## Releases
 
