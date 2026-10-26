@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest an idea for the mod
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: Describe the idea and how it would work in the game.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: What would it make better or more fun?

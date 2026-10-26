@@ -1,0 +1,52 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: mod-version
+    attributes:
+      label: Morning Stretch version
+      placeholder: 1.0.1
+    validations:
+      required: true
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      placeholder: "26.3"
+    validations:
+      required: true
+  - type: input
+    id: fabric-versions
+    attributes:
+      label: Fabric Loader and Fabric API versions
+      placeholder: Loader 0.20.1, Fabric API 0.165.0+26.3
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where is the mod installed?
+      options:
+        - Singleplayer
+        - Client and server
+        - Client only
+        - Server only
+    validations:
+      required: true
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: Other mods
+      description: Does it also happen with only Fabric API and Morning Stretch installed?
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Paste `logs/latest.log` or the crash report if the game crashed.
+      render: text
