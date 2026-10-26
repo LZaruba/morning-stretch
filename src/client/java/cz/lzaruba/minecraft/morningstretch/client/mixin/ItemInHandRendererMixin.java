@@ -1,7 +1,7 @@
-package cz.lzaruba.minecraft.stretch.client.mixin;
+package cz.lzaruba.minecraft.morningstretch.client.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import cz.lzaruba.minecraft.stretch.client.stretch.FirstPersonStretchTransforms;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.FirstPersonStretchTransforms;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -33,7 +33,7 @@ public abstract class ItemInHandRendererMixin {
 			argsOnly = true,
 			ordinal = 2
 	)
-	private float mineraftstretch$freezeSwing(float swingProgress) {
+	private float morningstretch$freezeSwing(float swingProgress) {
 		AbstractClientPlayer player = this.minecraft.player;
 		if (player != null && FirstPersonStretchTransforms.isStretching(player.getId())) {
 			return 0.0f;
@@ -54,7 +54,7 @@ public abstract class ItemInHandRendererMixin {
 					shift = At.Shift.AFTER
 			)
 	)
-	private void mineraftstretch$stretchArmInViewSpace(
+	private void morningstretch$stretchArmInViewSpace(
 			AbstractClientPlayer player,
 			float tickDelta,
 			float pitch,

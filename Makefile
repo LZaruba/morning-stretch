@@ -1,4 +1,4 @@
-# Mineraft Stretch — build, deploy & run
+# Morning Stretch — build, deploy & run
 #
 # Použití:
 #   make          # nápověda
@@ -10,7 +10,7 @@
 # Vlastní cesta k Minecraftu:
 #   make deploy MINECRAFT_DIR="/cesta/k/minecraft"
 
-MOD_NAME     := mineraft-stretch
+MOD_NAME     := morning-stretch
 MOD_VERSION  := 1.0.0
 JAR          := build/libs/$(MOD_NAME)-$(MOD_VERSION).jar
 GRADLE       := ./gradlew
@@ -33,7 +33,7 @@ MODS_DIR := $(MINECRAFT_DIR)/mods
 
 help:
 	@echo ""
-	@echo "Mineraft Stretch — dostupné příkazy"
+	@echo "Morning Stretch — dostupné příkazy"
 	@echo ""
 	@echo "  make build    Sestaví mod ($(JAR))"
 	@echo "  make deploy   Sestaví a zkopíruje JAR do: $(MODS_DIR)"

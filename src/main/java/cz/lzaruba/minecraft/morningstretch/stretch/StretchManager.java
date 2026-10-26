@@ -1,6 +1,6 @@
-package cz.lzaruba.minecraft.stretch.stretch;
+package cz.lzaruba.minecraft.morningstretch.stretch;
 
-import cz.lzaruba.minecraft.stretch.network.StretchPayload;
+import cz.lzaruba.minecraft.morningstretch.network.StretchPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;

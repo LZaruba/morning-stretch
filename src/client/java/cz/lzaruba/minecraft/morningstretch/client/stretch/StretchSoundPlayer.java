@@ -1,6 +1,6 @@
-package cz.lzaruba.minecraft.stretch.client.stretch;
+package cz.lzaruba.minecraft.morningstretch.client.stretch;
 
-import cz.lzaruba.minecraft.stretch.stretch.StretchManager;
+import cz.lzaruba.minecraft.morningstretch.stretch.StretchManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

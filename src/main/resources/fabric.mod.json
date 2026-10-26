@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "mineraft-stretch",
+	"id": "morning-stretch",
 	"version": "${version}",
-	"name": "Mineraft Stretch",
+	"name": "Morning Stretch",
 	"description": "Protahování po probuzení z postele a na klávesovou zkratku.",
 	"authors": [
 		"Lukas"
@@ -11,15 +11,15 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"cz.lzaruba.minecraft.stretch.MineraftStretchMod"
+			"cz.lzaruba.minecraft.morningstretch.MorningStretchMod"
 		],
 		"client": [
-			"cz.lzaruba.minecraft.stretch.client.MineraftStretchClient"
+			"cz.lzaruba.minecraft.morningstretch.client.MorningStretchClient"
 		]
 	},
 	"mixins": [
 		{
-			"config": "mineraft-stretch.client.mixins.json",
+			"config": "morning-stretch.client.mixins.json",
 			"environment": "client"
 		}
 	],

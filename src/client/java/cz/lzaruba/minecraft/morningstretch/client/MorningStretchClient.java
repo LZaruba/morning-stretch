@@ -1,10 +1,10 @@
-package cz.lzaruba.minecraft.stretch.client;
+package cz.lzaruba.minecraft.morningstretch.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import cz.lzaruba.minecraft.stretch.client.stretch.StretchClientState;
-import cz.lzaruba.minecraft.stretch.client.stretch.StretchSoundPlayer;
-import cz.lzaruba.minecraft.stretch.network.StretchPayload;
-import cz.lzaruba.minecraft.stretch.network.StretchRequestPayload;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.StretchClientState;
+import cz.lzaruba.minecraft.morningstretch.client.stretch.StretchSoundPlayer;
+import cz.lzaruba.minecraft.morningstretch.network.StretchPayload;
+import cz.lzaruba.minecraft.morningstretch.network.StretchRequestPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -14,13 +14,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-public class MineraftStretchClient implements ClientModInitializer {
+public class MorningStretchClient implements ClientModInitializer {
 	private static KeyMapping stretchKey;
 
 	@Override
 	public void onInitializeClient() {
 		stretchKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-				"key.mineraft-stretch.stretch",
+				"key.morning-stretch.stretch",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_R,
 				KeyMapping.CATEGORY_MISC

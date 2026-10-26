@@ -1,4 +1,4 @@
-package cz.lzaruba.minecraft.stretch.stretch;
+package cz.lzaruba.minecraft.morningstretch.stretch;
 
 public final class StretchAnimations {
 	public static final int DURATION_TICKS = 80;

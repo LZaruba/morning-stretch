@@ -18,7 +18,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"mineraft-stretch" {
+		"morning-stretch" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
