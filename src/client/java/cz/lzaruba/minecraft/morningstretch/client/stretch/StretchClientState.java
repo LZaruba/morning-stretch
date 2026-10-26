@@ -11,13 +11,25 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class StretchClientState {
 	private static final Map<Integer, Integer> activeByEntityId = new ConcurrentHashMap<>();
+	// Also covers entities this client does not track (too far away), for hiding names in suggestions.
+	private static final Map<UUID, Integer> activeByUuid = new ConcurrentHashMap<>();
 
 	private StretchClientState() {
 	}
 
-	public static void start(UUID playerUuid, int entityId) {
+	public static void start(UUID uuid, int entityId) {
 		activeByEntityId.put(entityId, StretchManager.DURATION_TICKS);
+		activeByUuid.put(uuid, StretchManager.DURATION_TICKS);
 		StretchSoundPlayer.onStretchStart(entityId);
+	}
+
+	public static void startUntracked(UUID uuid) {
+		activeByUuid.put(uuid, StretchManager.DURATION_TICKS);
+	}
+
+	public static boolean isStretching(UUID uuid) {
+		Integer remaining = activeByUuid.get(uuid);
+		return remaining != null && remaining >= 0;
 	}
 
 	public static float getProgress(int entityId) {
@@ -35,6 +47,9 @@ public final class StretchClientState {
 	}
 
 	public static void tick() {
+		activeByUuid.replaceAll((uuid, remaining) -> remaining - 1);
+		activeByUuid.values().removeIf(remaining -> remaining < 0);
+
 		if (activeByEntityId.isEmpty()) {
 			return;
 		}

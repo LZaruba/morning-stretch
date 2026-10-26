@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.UUID;
 
-public record StretchPayload(UUID playerUuid) implements CustomPacketPayload {
+public record StretchPayload(UUID entityUuid) implements CustomPacketPayload {
 	public static final Type<StretchPayload> TYPE = new Type<>(MorningStretchMod.id("stretch"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, StretchPayload> CODEC = StreamCodec.composite(
@@ -15,7 +15,7 @@ public record StretchPayload(UUID playerUuid) implements CustomPacketPayload {
 					(buf, uuid) -> buf.writeUUID(uuid),
 					buf -> buf.readUUID()
 			),
-			StretchPayload::playerUuid,
+			StretchPayload::entityUuid,
 			StretchPayload::new
 	);
 

@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public class MorningStretchClient implements ClientModInitializer {
@@ -54,21 +55,23 @@ public class MorningStretchClient implements ClientModInitializer {
 			return;
 		}
 
-		Player player = client.level.getPlayerByUUID(payload.playerUuid());
-		if (player == null && client.player != null && client.player.getUUID().equals(payload.playerUuid())) {
-			player = client.player;
+		// Usually a player, but any living entity can stretch (e.g. a test mannequin).
+		Entity entity = client.level.getEntity(payload.entityUuid());
+		if (entity == null && client.player != null && client.player.getUUID().equals(payload.entityUuid())) {
+			entity = client.player;
 		}
 
-		if (player == null) {
+		if (entity == null) {
+			StretchClientState.startUntracked(payload.entityUuid());
 			return;
 		}
 
 		// The local player already started the stretch on key press; ignore the server echo.
-		if (player == client.player && StretchClientState.isStretching(player.getId())) {
+		if (entity == client.player && StretchClientState.isStretching(entity.getId())) {
 			return;
 		}
 
-		StretchClientState.start(payload.playerUuid(), player.getId());
+		StretchClientState.start(payload.entityUuid(), entity.getId());
 	}
 
 	// Sneaking speed only blocks starting a sprint, so end one already in progress.
