@@ -1,0 +1,11 @@
+# Weekly update suggestions for GitHub Actions and Gradle plugins/dependencies.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly

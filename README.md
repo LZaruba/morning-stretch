@@ -43,6 +43,10 @@ Requirements: Java 17+ to run Gradle. The mod itself targets Java 25; Gradle dow
 
 The development client has a `/stretchtest spawn` command that places a mannequin which stretches every 10 seconds, so you can test the hiding without a second player (`/stretchtest remove` removes them).
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security problems: [SECURITY.md](SECURITY.md).
+
 ## Releasing
 
 1. Merge the changes to `main`. Pull request titles end up in the changelog, so write them for players.
