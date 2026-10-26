@@ -43,6 +43,7 @@ public class MorningStretchClient implements ClientModInitializer {
 				}
 			}
 
+			stopSprintWhileStretching(client);
 			tickStretchAudio(client);
 			StretchClientState.tick();
 		});
@@ -68,6 +69,13 @@ public class MorningStretchClient implements ClientModInitializer {
 		}
 
 		StretchClientState.start(payload.playerUuid(), player.getId());
+	}
+
+	// Sneaking speed only blocks starting a sprint, so end one already in progress.
+	private static void stopSprintWhileStretching(Minecraft client) {
+		if (client.player != null && client.player.isSprinting() && StretchClientState.isStretching(client.player.getId())) {
+			client.player.setSprinting(false);
+		}
 	}
 
 	private static void tickStretchAudio(Minecraft client) {
