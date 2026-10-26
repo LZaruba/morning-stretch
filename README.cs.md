@@ -272,6 +272,8 @@ Na něm ověříš skrytí jmenovky, locator baru i selektorů v příkazech. Ve
 
 Workflow vezme `main`, zvýší `mod_version` v `gradle.properties`, z Unreleased udělá sekci nové verze, vytvoří release commit s tagem `v<verze>` a publikuje mod na Modrinth a do GitHub Releases. Potřebuje secret `MODRINTH_TOKEN` (viz anglický README).
 
+Stránka projektu na Modrinthu (shrnutí, popis, kategorie, licence, odkazy, ikona a galerie) je uložená v repu v `docs/` a při každém vydání se nahraje. Bez vydání ji aktualizuje workflow **modrinth-project**.
+
 ---
 
 ## Struktura projektu

@@ -1,15 +1,25 @@
 """Render the Morning Stretch icon from the Minecraft player model in the full stretch pose.
 
-Usage: python3 tools/render_icon.py src/main/resources/assets/morning-stretch/icon.png
+Usage:
+  python3 tools/render_icon.py src/main/resources/assets/morning-stretch/icon.png
+  python3 tools/render_icon.py docs/gallery/featured.png --width 1280 --height 720 --texel 14 --supersample 2
 The pose matches StretchAnimations.compute at full stretch; requires Pillow.
 """
-import math, random, sys
+import argparse, math, random
 from PIL import Image
 
-OUT = 128
-SS = 4                      # supersampling
-W = OUT * SS
-TEXEL = 3.15 * SS           # screen pixels per model unit
+parser = argparse.ArgumentParser()
+parser.add_argument("output")
+parser.add_argument("--width", type=int, default=128)
+parser.add_argument("--height", type=int, default=128)
+parser.add_argument("--texel", type=float, default=3.15, help="output pixels per model unit")
+parser.add_argument("--supersample", type=int, default=4)
+args = parser.parse_args()
+
+SS = args.supersample
+W = args.width * SS
+H = args.height * SS
+TEXEL = args.texel * SS     # screen pixels per model unit
 rng = random.Random(11)
 
 def shade(c, f):
@@ -96,18 +106,18 @@ LIGHT = (-0.35, -0.8, -0.5)
 ln = math.sqrt(sum(v * v for v in LIGHT))
 LIGHT = tuple(v / ln for v in LIGHT)
 
-GROUND_Y = OUT * SS - round(14 * SS)       # screen y of the feet
+GROUND_Y = H - round(4.45 * TEXEL)         # screen y of the feet
 FEET = 24.0
 def to_screen(p):
     return (W / 2 + p[0] * TEXEL, GROUND_Y + (p[1] - FEET) * TEXEL)
 
 # --- Background: warm sunrise, big square sun with rays behind the character, grass blocks ---
 from PIL import ImageFilter
-img = Image.new("RGB", (W, W))
+img = Image.new("RGB", (W, H))
 px = img.load()
 SUN_C = (W / 2, GROUND_Y - 25.5 * TEXEL)     # behind the head
-for y in range(W):
-    t = y / W
+for y in range(H):
+    t = y / H
     if t < 0.45:
         c = lerp((70, 92, 190), (196, 120, 190), t / 0.45)
     else:
@@ -115,14 +125,14 @@ for y in range(W):
     for x in range(W):
         dx, dy = x - SUN_C[0], y - SUN_C[1]
         ang = math.atan2(dy, dx)
-        dist = math.hypot(dx, dy) / W
+        dist = math.hypot(dx, dy) / max(W, H)
         ray = 0.5 + 0.5 * math.cos(ang * 12)
         glow = max(0.0, 1 - dist / 0.75)
         c2 = lerp(c, (255, 236, 170), 0.55 * glow * glow + 0.22 * ray * glow)
         px[x, y] = tuple(round(v) for v in c2)
 
 def fill(x0, y0, x1, y1, color):
-    for y in range(max(0, int(y0)), min(W, int(y1))):
+    for y in range(max(0, int(y0)), min(H, int(y1))):
         for x in range(max(0, int(x0)), min(W, int(x1))):
             px[x, y] = color
 
@@ -140,7 +150,7 @@ for gx in range(-cols, cols):
     edge = 2 + (1 if rng.random() < 0.4 else 0)
     for gy in range(0, 8):
         ground[(gx, gy)] = rng.choice(grass) if gy < edge else rng.choice(dirt)
-for y in range(GROUND_Y, W):
+for y in range(GROUND_Y, H):
     gy = int((y - GROUND_Y) / T)
     for x in range(W):
         gx = math.floor((x - W / 2) / T)
@@ -150,7 +160,7 @@ for y in range(GROUND_Y, GROUND_Y + int(1.5 * T)):
         px[x, y] = shade(px[x, y], 0.72)
 
 background = img
-img = Image.new("RGBA", (W, W), (0, 0, 0, 0))
+img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
 px = img.load()
 
 # --- Rasterize faces back to front ---
@@ -175,7 +185,7 @@ for depth, p00, p10, p01, texture, light in faces:
     xs = [a[0], b[0], c[0], b[0] + vx]
     ys = [a[1], b[1], c[1], b[1] + vy]
     rows, cols_t = len(texture), len(texture[0])
-    for y in range(max(0, int(min(ys))), min(W, int(max(ys)) + 1)):
+    for y in range(max(0, int(min(ys))), min(H, int(max(ys)) + 1)):
         for x in range(max(0, int(min(xs))), min(W, int(max(xs)) + 1)):
             dx, dy = x + 0.5 - a[0], y + 0.5 - a[1]
             u = (dx * vy - dy * vx) / det
@@ -186,8 +196,8 @@ for depth, p00, p10, p01, texture, light in faces:
 # Dark outline around the character so it reads at small sizes.
 alpha = img.split()[3]
 outline_mask = alpha.filter(ImageFilter.MaxFilter(2 * round(0.9 * SS) + 1))
-outline = Image.new("RGBA", (W, W), (40, 24, 40, 255))
+outline = Image.new("RGBA", (W, H), (40, 24, 40, 255))
 background = background.convert("RGBA")
 background.paste(outline, (0, 0), outline_mask)
 background.alpha_composite(img)
-background.convert("RGB").resize((OUT, OUT), Image.LANCZOS).save(sys.argv[1])
+background.convert("RGB").resize((args.width, args.height), Image.LANCZOS).save(args.output)

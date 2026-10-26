@@ -1,0 +1,19 @@
+{
+	"slug": "morning-stretch",
+	"description": "Stretch after waking up or on a key press, with a yawn, sounds and a brief moment of being hidden from other players.",
+	"body_file": "docs/modrinth-description.md",
+	"categories": ["social", "game-mechanics"],
+	"additional_categories": [],
+	"license_id": "LGPL-3.0-or-later",
+	"source_url": "https://github.com/LZaruba/morning-stretch",
+	"issues_url": "https://github.com/LZaruba/morning-stretch/issues",
+	"icon": "src/main/resources/assets/morning-stretch/icon.png",
+	"gallery": [
+		{
+			"file": "docs/gallery/featured.png",
+			"title": "Morning Stretch",
+			"description": "Arms wide, a lean back and a big yawn.",
+			"featured": true
+		}
+	]
+}
