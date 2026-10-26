@@ -52,7 +52,7 @@ The workflow takes `main`, bumps `mod_version` in `gradle.properties` and writes
 
 It needs the `MODRINTH_TOKEN` secret in the `default` environment (*Settings → Environments*): a Modrinth personal access token with the *Read projects*, *Write projects* and *Create versions* scopes.
 
-The Modrinth project page is kept in the repository and synced on every release by [tools/sync_modrinth_project.py](tools/sync_modrinth_project.py): summary, categories, license and links in [docs/modrinth-project.json](docs/modrinth-project.json), the description in [docs/modrinth-description.md](docs/modrinth-description.md), the icon and the gallery images in [docs/gallery](docs/gallery). To sync it without a release, run the **modrinth-project** workflow. The icon and gallery images are rendered by [tools/render_icon.py](tools/render_icon.py).
+The Modrinth project page is kept in the repository and synced on every release by [tools/sync_modrinth_project.py](tools/sync_modrinth_project.py): summary, categories, license and links in [docs/modrinth-project.json](docs/modrinth-project.json), the description in [docs/modrinth-description.md](docs/modrinth-description.md), the icon and the gallery images in [docs/gallery](docs/gallery). The icon and gallery images are rendered by [tools/render_icon.py](tools/render_icon.py).
 
 `./gradlew publishMods` without `MODRINTH_TOKEN` only does a dry run.
 
